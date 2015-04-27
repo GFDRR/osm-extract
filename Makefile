@@ -20,7 +20,6 @@ buildings.pbf: nepal-latest.pbf
 damage.pbf: buildings.pbf
 	osmosis --read-pbf-fast file="$<" --wkv keyValueList="building.damaged,buildings.collapsed"  --write-pbf file="$@"
 
-
 huts.pbf: buildings.pbf
 	osmosis --read-pbf-fast file="$<" --tf accept-ways "building=hut" --write-pbf file="$@"
 
@@ -98,39 +97,38 @@ all_roads.pbf: nepal-latest.pbf
 	osmosis --read-pbf-fast file="$<" --wkv keyValueList="highway.tertiary,highway.residential,highway.service,highway.secondary,highway.track,highway.footway,highway.path,highway.classified,highway.primary,highway.trunk,highway.motorway,highway.construction,highway.proposed,highway.cycleway,highway.living_street,highway.steps,highway.road,highway.pedestrian,highway.construction,highway.bridleway,highway.platformhighway.proposed" --write-pbf file="$@"
 
 main_roads.pbf: nepal-latest.pbf
-	osmosis --read-pbf-fast file="$<"  --tf accept-ways "highway=motorway" --tf accept-ways "highway=trunk" --tf accept-ways "highway=primary"   --write-pbf file="$@"
+	osmosis --read-pbf-fast file="$<" --wkv keyValueList="highway.motorway,highway.trunk,highway.primary" --write-pbf file="$@"
 
 paths.pbf: nepal-latest.pbf
-	osmosis --read-pbf-fast file="$<"  --tf accept-ways "highway=path" --tf accept-ways "highway=trunk" --tf accept-ways "highway=primary"   --write-pbf file="$@"
+	osmosis --read-pbf-fast file="$<" --wkv keyValueList="highway.path,highway.trunk,highway.primary"  --write-pbf file="$@"
 
 tracks.pbf: nepal-latest.pbf
 	osmosis --read-pbf-fast file="$<"  --tf accept-ways "highway=tracks" --write-pbf file="$@"
 
 aerodromes_point.pbf: nepal-latest.pbf
-	osmosis --read-pbf-fast file="$<"  --tf accept-nodes "aeroway=aerodrome"  --tf accept-nodes "aeroway=international"  --write-pbf file="$@"
+	osmosis --read-pbf-fast file="$<" --nkv keyValueList="aeroway.aerodrome,aeroway.international" --write-pbf file="$@"
 
 aerodromes_polygon.pbf: nepal-latest.pbf
-	osmosis --read-pbf-fast file="$<"  --tf accept-ways "aeroway=aerodrome"  --tf accept-ways "aeroway=international"  --write-pbf file="$@"
-
+	osmosis --read-pbf-fast file="$<" --wkv keyValueList="aeroway.aerodrome,aeroway.international" --write-pbf file="$@"
 
 banks.pbf: nepal-latest.pbf
-	osmosis --read-pbf-fast file="$<"  --tf accept-nodes "amenity=bank" --write-pbf file="$@"
+	osmosis --read-pbf-fast file="$<" --tf accept-nodes "amenity=bank" --write-pbf file="$@"
 
 fire_stations.pbf: nepal-latest.pbf
-	osmosis --read-pbf-fast file="$<"  --tf accept-nodes "amenity=fire_station" --write-pbf file="$@"
+	osmosis --read-pbf-fast file="$<" --tf accept-nodes "amenity=fire_station" --write-pbf file="$@"
 
 hotels.pbf: nepal-latest.pbf
-	osmosis --read-pbf-fast file="$<"  --tf accept-nodes "turism=hotel" --write-pbf file="$@"
+	osmosis --read-pbf-fast file="$<" --tf accept-nodes "turism=hotel" --write-pbf file="$@"
 
 
 police_stations.pbf: nepal-latest.pbf
-	osmosis --read-pbf-fast file="$<"  --tf accept-nodes "amenity=police"  --tf accept-nodes "tourism=police"  --write-pbf file="$@"
+	osmosis --read-pbf-fast file="$<" --nkv keyValueList="amenity.police,tourism.police" --write-pbf file="$@"
 
 restaurants.pbf: nepal-latest.pbf
-	osmosis --read-pbf-fast file="$<"  --tf accept-nodes "amenity=restaurant"  --tf accept-nodes "amenity=restaurants"  --write-pbf file="$@"
+	osmosis --read-pbf-fast file="$<" --nkv keyValueList="amenity.restaurant,amenity.restaurants" --write-pbf file="$@"
 
 train_stations.pbf: nepal-latest.pbf
-	osmosis --read-pbf-fast file="$<"  --tf accept-nodes "railway=station"  --write-pbf file="$@"
+	osmosis --read-pbf-fast file="$<" --tf accept-nodes "railway=station"  --write-pbf file="$@"
 
 SQL_EXPORTS = buildings.sql damage.sql huts.sql trees.sql schools.sql medical_points.sql medical_polygons.sql roads.sql  rivers.sql riverbanks.sql lakes.sql beaches.sql farms.sql forest.sql grassland.sql military.sql orchards.sql residential.sql village_green.sql wetlands.sql cities.sql hamlets.sql neighborhoods.sql villages.sql placenames.sql all_roads.sql main_roads.sql paths.sql tracks.sql aerodromes_point.sql aerodromes_polygon.sql banks.sql fire_stations.sql hotels.sql police_stations.sql restaurants.sql train_stations.sql
 
