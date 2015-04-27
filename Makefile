@@ -18,10 +18,10 @@ buildings.pbf: nepal-latest.pbf
 	osmosis --read-pbf-fast file="$<"  --tf accept-ways "building=*"  --write-pbf file="$@"
 
 damage.pbf: buildings.pbf
-	osmosis --read-pbf-fast file="$<" --wkv keyValueList="building.damaged,buildings.collapsed"  --write-pbf file="$@"
+	osmosis --read-pbf-fast file="$<" --wkv keyValueList="building.damaged,buildings.collapsed"  --write-pbf --used-node file="$@"
 
 huts.pbf: buildings.pbf
-	osmosis --read-pbf-fast file="$<" --tf accept-ways "building=hut" --write-pbf file="$@"
+	osmosis --read-pbf-fast file="$<" --tf accept-ways "building=hut" --used-node --write-pbf file="$@"
 
 trees.pbf: nepal-latest.pbf
 	osmosis --read-pbf-fast file="$<" --tf accept-nodes "natural=tree" --write-pbf file="$@"
@@ -30,52 +30,52 @@ schools_point.pbf: nepal-latest.pbf
 	osmosis --read-pbf-fast file="$<" --nkv keyValueList="amenity.school,amenity.university,amenity.college,amenity.kindergarten" --write-pbf file="$@"
 
 schools_polygon.pbf: nepal-latest.pbf
-	osmosis --read-pbf-fast file="$<" --wkv keyValueList="amenity.school,amenity.university,amenity.college,amenity.kindergarten" --write-pbf file="$@"
+	osmosis --read-pbf-fast file="$<" --wkv keyValueList="amenity.school,amenity.university,amenity.college,amenity.kindergarten" --used-node --write-pbf file="$@"
 
-medical_points.pbf: nepal-latest.pbf
+medical_point.pbf: nepal-latest.pbf
 	osmosis --read-pbf-fast file="$<" --nkv keyValueList="amenity.hospital,amenity.doctors,amenity.doctor,amenity.clinic,amenity.health_post" --write-pbf file="$@"
 
-medical_polygons.pbf: buildings.pbf
-	osmosis --read-pbf-fast file="$<" --wkv keyValueList="amenity.hospital,amenity.doctors,amenity.doctor,amenity.clinic,amenity.health_post" --write-pbf file="$@"
+medical_polygon.pbf: buildings.pbf
+	osmosis --read-pbf-fast file="$<" --wkv keyValueList="amenity.hospital,amenity.doctors,amenity.doctor,amenity.clinic,amenity.health_post" --used-node --write-pbf file="$@"
   
 roads.pbf: nepal-latest.pbf
-	osmosis --read-pbf-fast file="$<"  --tf accept-ways "highway=*"  --write-pbf file="$@"
+	osmosis --read-pbf-fast file="$<"  --tf accept-ways "highway=*" --used-node --write-pbf file="$@"
 
 rivers.pbf: nepal-latest.pbf
-	osmosis --read-pbf-fast file="$<" --wkv keyValueList="waterway.river,waterway.stream,waterway.ditch" --write-pbf file="$@"
+	osmosis --read-pbf-fast file="$<" --wkv keyValueList="waterway.river,waterway.stream,waterway.ditch" --used-node --write-pbf file="$@"
   
 riverbanks.pbf: nepal-latest.pbf
-	osmosis --read-pbf-fast file="$<" --wkv keyValueList="waterway.riverbank" --write-pbf file="$@"
+	osmosis --read-pbf-fast file="$<" --wkv keyValueList="waterway.riverbank" --used-node --write-pbf file="$@"
 
 lakes.pbf: nepal-latest.pbf
-	osmosis --read-pbf-fast file="$<" --wkv keyValueList="natural.water,water.lake" --write-pbf file="$@"
+	osmosis --read-pbf-fast file="$<" --wkv keyValueList="natural.water,water.lake" --used-node --write-pbf file="$@"
  
 beaches.pbf: nepal-latest.pbf
-	osmosis --read-pbf-fast file="$<" --wkv keyValueList="natural.beach" --write-pbf file="$@"
+	osmosis --read-pbf-fast file="$<" --wkv keyValueList="natural.beach" --used-node --write-pbf file="$@"
 
 farms.pbf: nepal-latest.pbf
-	osmosis --read-pbf-fast file="$<" --wkv keyValueList="landuse.farm,landuse.farmland,landuse.farmyard" --write-pbf file="$@"
+	osmosis --read-pbf-fast file="$<" --wkv keyValueList="landuse.farm,landuse.farmland,landuse.farmyard" --used-node --write-pbf file="$@"
  
 forest.pbf: nepal-latest.pbf
-	osmosis --read-pbf-fast file="$<" --wkv keyValueList="landuse.forest" --write-pbf file="$@"
+	osmosis --read-pbf-fast file="$<" --wkv keyValueList="landuse.forest" --used-node --write-pbf file="$@"
  
 grassland.pbf: nepal-latest.pbf
-	osmosis --read-pbf-fast file="$<" --wkv keyValueList= "landuse.grass,landuse.grassland,natural.wood,natural.grassland" --write-pbf file="$@"
+	osmosis --read-pbf-fast file="$<" --wkv keyValueList="landuse.grass,landuse.grassland,natural.wood,natural.grassland" --used-node --write-pbf file="$@"
  
 military.pbf: nepal-latest.pbf
-	osmosis --read-pbf-fast file="$<"  --tf accept-ways "landuse=military" --write-pbf file="$@"
+	osmosis --read-pbf-fast file="$<"  --tf accept-ways "landuse=military" --used-node --write-pbf file="$@"
  
 orchards.pbf: nepal-latest.pbf
-	osmosis --read-pbf-fast file="$<"  --tf accept-ways "landuse=orchard" --write-pbf file="$@"
+	osmosis --read-pbf-fast file="$<"  --tf accept-ways "landuse=orchard" --used-node --write-pbf file="$@"
 
 residential.pbf: nepal-latest.pbf
-	osmosis --read-pbf-fast file="$<"  --tf accept-ways "landuse=residential" --write-pbf file="$@"
+	osmosis --read-pbf-fast file="$<"  --tf accept-ways "landuse=residential" --used-node --write-pbf file="$@"
 
 village_green.pbf: nepal-latest.pbf
-	osmosis --read-pbf-fast file="$<"  --tf accept-ways "landuse=village_green" --write-pbf file="$@"
+	osmosis --read-pbf-fast file="$<"  --tf accept-ways "landuse=village_green" --used-node --write-pbf file="$@"
 
 wetlands.pbf: nepal-latest.pbf
-	osmosis --read-pbf-fast file="$<"  --tf accept-ways "landuse=wetland" --write-pbf file="$@"
+	osmosis --read-pbf-fast file="$<"  --tf accept-ways "landuse=wetland" --used-node --write-pbf file="$@"
 
 cities.pbf: nepal-latest.pbf
 	osmosis --read-pbf-fast file="$<"  --tf accept-nodes "place=city" --write-pbf file="$@"
@@ -94,22 +94,22 @@ placenames.pbf: nepal-latest.pbf
 
 
 all_roads.pbf: nepal-latest.pbf
-	osmosis --read-pbf-fast file="$<" --wkv keyValueList="highway.tertiary,highway.residential,highway.service,highway.secondary,highway.track,highway.footway,highway.path,highway.classified,highway.primary,highway.trunk,highway.motorway,highway.construction,highway.proposed,highway.cycleway,highway.living_street,highway.steps,highway.road,highway.pedestrian,highway.construction,highway.bridleway,highway.platformhighway.proposed" --write-pbf file="$@"
+	osmosis --read-pbf-fast file="$<" --wkv keyValueList="highway.tertiary,highway.residential,highway.service,highway.secondary,highway.track,highway.footway,highway.path,highway.classified,highway.primary,highway.trunk,highway.motorway,highway.construction,highway.proposed,highway.cycleway,highway.living_street,highway.steps,highway.road,highway.pedestrian,highway.construction,highway.bridleway,highway.platformhighway.proposed" --used-node --write-pbf file="$@"
 
 main_roads.pbf: nepal-latest.pbf
-	osmosis --read-pbf-fast file="$<" --wkv keyValueList="highway.motorway,highway.trunk,highway.primary" --write-pbf file="$@"
+	osmosis --read-pbf-fast file="$<" --wkv keyValueList="highway.motorway,highway.trunk,highway.primary" --used-node --write-pbf file="$@"
 
 paths.pbf: nepal-latest.pbf
-	osmosis --read-pbf-fast file="$<" --wkv keyValueList="highway.path,highway.trunk,highway.primary"  --write-pbf file="$@"
+	osmosis --read-pbf-fast file="$<" --wkv keyValueList="highway.path,highway.trunk,highway.primary" --used-node  --write-pbf file="$@"
 
 tracks.pbf: nepal-latest.pbf
-	osmosis --read-pbf-fast file="$<"  --tf accept-ways "highway=tracks" --write-pbf file="$@"
+	osmosis --read-pbf-fast file="$<"  --tf accept-ways "highway=tracks" --used-node --write-pbf file="$@"
 
 aerodromes_point.pbf: nepal-latest.pbf
 	osmosis --read-pbf-fast file="$<" --nkv keyValueList="aeroway.aerodrome,aeroway.international" --write-pbf file="$@"
 
 aerodromes_polygon.pbf: nepal-latest.pbf
-	osmosis --read-pbf-fast file="$<" --wkv keyValueList="aeroway.aerodrome,aeroway.international" --write-pbf file="$@"
+	osmosis --read-pbf-fast file="$<"  --wkv keyValueList="aeroway.aerodrome,aeroway.international" --used-node --write-pbf file="$@"
 
 banks.pbf: nepal-latest.pbf
 	osmosis --read-pbf-fast file="$<" --tf accept-nodes "amenity=bank" --write-pbf file="$@"
@@ -130,7 +130,7 @@ restaurants.pbf: nepal-latest.pbf
 train_stations.pbf: nepal-latest.pbf
 	osmosis --read-pbf-fast file="$<" --tf accept-nodes "railway=station"  --write-pbf file="$@"
 
-SQL_EXPORTS = buildings.sql damage.sql huts.sql trees.sql schools.sql medical_points.sql medical_polygons.sql roads.sql  rivers.sql riverbanks.sql lakes.sql beaches.sql farms.sql forest.sql grassland.sql military.sql orchards.sql residential.sql village_green.sql wetlands.sql cities.sql hamlets.sql neighborhoods.sql villages.sql placenames.sql all_roads.sql main_roads.sql paths.sql tracks.sql aerodromes_point.sql aerodromes_polygon.sql banks.sql fire_stations.sql hotels.sql police_stations.sql restaurants.sql train_stations.sql
+SQL_EXPORTS = buildings.sql damage.sql huts.sql trees.sql schools_point.sql schools_polygon.sql medical_point.sql medical_polygon.sql rivers.sql riverbanks.sql lakes.sql beaches.sql farms.sql forest.sql grassland.sql military.sql orchards.sql residential.sql village_green.sql wetlands.sql cities.sql hamlets.sql neighborhoods.sql villages.sql placenames.sql all_roads.sql main_roads.sql paths.sql tracks.sql aerodromes_point.sql aerodromes_polygon.sql banks.sql fire_stations.sql hotels.sql police_stations.sql restaurants.sql train_stations.sql
 
 PBF_EXPORTS = $(SQL_EXPORTS:.sql=.pbf)
 SQL_ZIP_EXPORTS = $(SQL_EXPORTS:.sql=.sql.zip)
@@ -152,7 +152,6 @@ all: $(PBF_EXPORTS)
 
 .PHONY: clean
 clean:
-	rm -rf nepal-latest.pbf
-	rm -rf buildings.pbf roads.pbf
-	rm -rf buildings.zip roads.zip
-	rm -rf buildings.sql roads.sql
+	rm -rf *.pbf
+	rm -rf *.zip
+	rm -rf *.sql
