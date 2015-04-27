@@ -18,47 +18,50 @@ buildings.pbf: nepal-latest.pbf
 	osmosis --read-pbf-fast file="$<"  --tf accept-ways "building=*"  --write-pbf file="$@"
 
 damage.pbf: buildings.pbf
-	osmosis --read-pbf-fast file="$<"  --tf accept-ways "building=damaged" --tf accept-ways "buildings=collapsed"  --write-pbf file="$@"
+	osmosis --read-pbf-fast file="$<" --wkv keyValueList="building.damaged,buildings.collapsed"  --write-pbf file="$@"
 
 
 huts.pbf: buildings.pbf
-	osmosis --read-pbf-fast file="$<"  --tf accept-ways "building=hut" --write-pbf file="$@"
+	osmosis --read-pbf-fast file="$<" --tf accept-ways "building=hut" --write-pbf file="$@"
 
 trees.pbf: nepal-latest.pbf
-	osmosis --read-pbf-fast file="$<"  --tf accept-nodes "natural=tree" --write-pbf file="$@"
+	osmosis --read-pbf-fast file="$<" --tf accept-nodes "natural=tree" --write-pbf file="$@"
 
-schools.pbf: nepal-latest.pbf
-	osmosis --read-pbf-fast file="$<" --node-key-value keyValueList "amenity.school,amenity.university,amenity.college,amenity.kindergarten"  --write-pbf file="$@"
+schools_point.pbf: nepal-latest.pbf
+	osmosis --read-pbf-fast file="$<" --nkv keyValueList="amenity.school,amenity.university,amenity.college,amenity.kindergarten" --write-pbf file="$@"
+
+schools_polygon.pbf: nepal-latest.pbf
+	osmosis --read-pbf-fast file="$<" --wkv keyValueList="amenity.school,amenity.university,amenity.college,amenity.kindergarten" --write-pbf file="$@"
 
 medical_points.pbf: nepal-latest.pbf
-	osmosis --read-pbf-fast file="$<"  --tf accept-nodes "amenity=hospital" --tf accept-nodes "amenity=doctors"  --tf accept-nodes "amenity=doctor" --tf accept-nodes "amenity=clinic"  --tf accept-nodes "amenity=health_post"   --write-pbf file="$@"
+	osmosis --read-pbf-fast file="$<" --nkv keyValueList="amenity.hospital,amenity.doctors,amenity.doctor,amenity.clinic,amenity.health_post" --write-pbf file="$@"
 
 medical_polygons.pbf: buildings.pbf
-	osmosis --read-pbf-fast file="$<"  --tf accept-ways "amenity=hospital" --tf accept-ways "amenity=doctors"  --tf accept-ways "amenity=doctor" --tf accept-ways "amenity=clinic"  --tf accept-ways "amenity=health_post"   --write-pbf file="$@"
+	osmosis --read-pbf-fast file="$<" --wkv keyValueList="amenity.hospital,amenity.doctors,amenity.doctor,amenity.clinic,amenity.health_post" --write-pbf file="$@"
   
 roads.pbf: nepal-latest.pbf
 	osmosis --read-pbf-fast file="$<"  --tf accept-ways "highway=*"  --write-pbf file="$@"
 
 rivers.pbf: nepal-latest.pbf
-	osmosis --read-pbf-fast file="$<"  --tf accept-ways "waterway=river" --tf accept-ways "waterway=stream"  --tf accept-ways "waterway=ditch" --write-pbf file="$@"
+	osmosis --read-pbf-fast file="$<" --wkv keyValueList="waterway.river,waterway.stream,waterway.ditch" --write-pbf file="$@"
   
 riverbanks.pbf: nepal-latest.pbf
-	osmosis --read-pbf-fast file="$<"  --tf accept-ways "waterway=riverbank" --write-pbf file="$@"
+	osmosis --read-pbf-fast file="$<" --wkv keyValueList="waterway.riverbank" --write-pbf file="$@"
 
 lakes.pbf: nepal-latest.pbf
-	osmosis --read-pbf-fast file="$<"  --tf accept-ways "natural=water" --tf accept-ways "water=lake" --write-pbf file="$@"
+	osmosis --read-pbf-fast file="$<" --wkv keyValueList="natural.water,water.lake" --write-pbf file="$@"
  
 beaches.pbf: nepal-latest.pbf
-	osmosis --read-pbf-fast file="$<"  --tf accept-ways "natural=beach" --write-pbf file="$@"
+	osmosis --read-pbf-fast file="$<" --wkv keyValueList="natural.beach" --write-pbf file="$@"
 
 farms.pbf: nepal-latest.pbf
-	osmosis --read-pbf-fast file="$<"  --tf accept-ways "landuse=farm" --tf accept-ways "landuse=farmland" --tf accept-ways "landuse=farmyard" --write-pbf file="$@"
+	osmosis --read-pbf-fast file="$<" --wkv keyValueList="landuse.farm,landuse.farmland,landuse.farmyard" --write-pbf file="$@"
  
 forest.pbf: nepal-latest.pbf
-	osmosis --read-pbf-fast file="$<"  --tf accept-ways "landuse=forest" --write-pbf file="$@"
+	osmosis --read-pbf-fast file="$<" --wkv keyValueList="landuse.forest" --write-pbf file="$@"
  
 grassland.pbf: nepal-latest.pbf
-	osmosis --read-pbf-fast file="$<"  --tf accept-ways "landuse=grass" --tf accept-ways "landuse=grassland" --tf accept-ways "natural=wood"  --tf accept-ways "natural=grassland" --write-pbf file="$@"
+	osmosis --read-pbf-fast file="$<" --wkv keyValueList= "landuse.grass,landuse.grassland,natural.wood,natural.grassland" --write-pbf file="$@"
  
 military.pbf: nepal-latest.pbf
 	osmosis --read-pbf-fast file="$<"  --tf accept-ways "landuse=military" --write-pbf file="$@"
@@ -82,17 +85,17 @@ hamlets.pbf: nepal-latest.pbf
 	osmosis --read-pbf-fast file="$<"  --tf accept-nodes "place=hamlet" --write-pbf file="$@"
 
 neighborhoods.pbf: nepal-latest.pbf
-	osmosis --read-pbf-fast file="$<"  --tf accept-nodes "place=neighborhood" --tf accept-nodes "place=neighbourhood"  --write-pbf file="$@"
+	osmosis --read-pbf-fast file="$<" --nkv keyValueList="place.neighborhood,place.neighbourhood"  --write-pbf file="$@"
 
 villages.pbf: nepal-latest.pbf
 	osmosis --read-pbf-fast file="$<"  --tf accept-nodes "place=village" --write-pbf file="$@"
 
 placenames.pbf: nepal-latest.pbf
-	osmosis --read-pbf-fast file="$<"  --tf accept-nodes "place=city" --tf accept-nodes "place=hamlet" --tf accept-nodes "place=neighborhood" --tf accept-nodes "place=neighbourhood" --tf accept-nodes "place=village"   --write-pbf file="$@"
+	osmosis --read-pbf-fast file="$<" --nkv keyValueList="place.city,place.hamlet,place.neighborhood,place.neighbourhood,place.village"  --write-pbf file="$@"
 
 
 all_roads.pbf: nepal-latest.pbf
-	osmosis --read-pbf-fast file="$<"  --tf accept-ways "highway=tertiary" --tf accept-ways "highway=residential" --tf accept-ways "highway=service" --tf accept-ways "highway=secondary" --tf accept-ways "highway=track" --tf accept-ways "highway=footway" --tf accept-ways "highway=path" --tf accept-ways "highway=unclassified" --tf accept-ways "highway=primary" --tf accept-ways "highway=trunk" --tf accept-ways "highway=motorway" --tf accept-ways "highway=construction" --tf accept-ways "highway=proposed" --tf accept-ways "highway=cycleway" --tf accept-ways "highway=living_street" --tf accept-ways "highway=steps" --tf accept-ways "highway=road" --tf accept-ways "highway=pedestrian" --tf accept-ways "highway=construction" --tf accept-ways "highway=bridleway" --tf accept-ways "highway=platform" --tf accept-ways "highway=proposed" --write-pbf file="$@"
+	osmosis --read-pbf-fast file="$<" --wkv keyValueList="highway.tertiary,highway.residential,highway.service,highway.secondary,highway.track,highway.footway,highway.path,highway.classified,highway.primary,highway.trunk,highway.motorway,highway.construction,highway.proposed,highway.cycleway,highway.living_street,highway.steps,highway.road,highway.pedestrian,highway.construction,highway.bridleway,highway.platformhighway.proposed" --write-pbf file="$@"
 
 main_roads.pbf: nepal-latest.pbf
 	osmosis --read-pbf-fast file="$<"  --tf accept-ways "highway=motorway" --tf accept-ways "highway=trunk" --tf accept-ways "highway=primary"   --write-pbf file="$@"
