@@ -8,7 +8,6 @@
 # Once you have them, make sure gdal/apps and osmosis/bin are added to our path before running this file.
 
 DB=nepal_osm
-DATA_DIR=data
 EXPORT_DIR=/var/www/html/data
 
 nepal-latest.pbf: 
@@ -146,7 +145,7 @@ SQL_ZIP_EXPORTS = $(SQL_EXPORTS:.sql=.sql.zip)
 	psql -f conf/clean.sql -q $(DB)
 
 all: $(PBF_EXPORTS)
-	cp *.pbf /var/www/html/data
+	cp *.pbf $(EXPORT_DIR)
 
 
 .PHONY: clean
