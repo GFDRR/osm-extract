@@ -1,1 +1,2 @@
-ALTER TABLE lines RENAME TO roads;
+DROP TABLE roads;
+CREATE TABLE roads AS SELECT * FROM lines;
