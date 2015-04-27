@@ -1,1 +1,1 @@
-ALTER TABLE multilinestrings RENAME TO roads;
+ALTER TABLE lines RENAME TO roads;

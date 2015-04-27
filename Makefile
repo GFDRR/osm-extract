@@ -9,11 +9,8 @@
 
 DB=nepal_osm
 
-planet.osm.pbf:
-	curl -o $@ 'http://ftp5.gwdg.de/pub/misc/openstreetmap/planet.openstreetmap.org/pbf/planet-latest.osm.pbf'
-
 nepal-latest.pbf: 
-	curl -o $@ 'http://download.geofabrik.de/asia/nepal-latest.osm.pbf'
+	curl -o $@ 'http://labs.geofabrik.de/nepal/latest.osm.pbf'
 
 buildings.pbf: nepal-latest.pbf
 	osmosis --read-pbf-fast file="$<"  --tf accept-ways "building=*"  --write-pbf file="$@"
@@ -26,5 +23,5 @@ roads.pbf: nepal-latest.pbf
 
 %.postgis: %.sql
 	psql -f $< $(DB)
-#	psql -f conf/$(basename $@)_alter.sql $(DB)
-#	psql -f clean.sql $(DB)
+	psql -f conf/$(basename $@)_alter.sql $(DB)
+	psql -f clean.sql -q $(DB)
