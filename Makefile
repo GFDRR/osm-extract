@@ -28,7 +28,7 @@ trees.pbf: nepal-latest.pbf
 	osmosis --read-pbf-fast file="$<"  --tf accept-nodes "natural=tree" --write-pbf file="$@"
 
 schools.pbf: nepal-latest.pbf
-	osmosis --read-pbf-fast file="$<"  --tf accept-nodes "amenity=school" --tf accept-nodes "amenity=university"  --tf accept-nodes "amenity=college" --tf accept-nodes "amenity=kindergarten"  --write-pbf file="$@"
+	osmosis --read-pbf-fast file="$<" --node-key-value keyValueList "amenity.school,amenity.university,amenity.college,amenity.kindergarten"  --write-pbf file="$@"
 
 medical_points.pbf: nepal-latest.pbf
 	osmosis --read-pbf-fast file="$<"  --tf accept-nodes "amenity=hospital" --tf accept-nodes "amenity=doctors"  --tf accept-nodes "amenity=doctor" --tf accept-nodes "amenity=clinic"  --tf accept-nodes "amenity=health_post"   --write-pbf file="$@"
