@@ -4,7 +4,8 @@ import time
 import os
 
 actions="""
-document.write(result);
+    var result="%s";
+    document.write(result);
 """
 extentions = ['sql.zip', 'pbf', 'shp.zip']
 
@@ -12,14 +13,13 @@ extentions = ['sql.zip', 'pbf', 'shp.zip']
 @click.option('--names', help='Filenames.')
 def stats(names):
     """Simple program that generates stats for OSM exports"""
-    output='var data = {"list": %s}'
     names = names.split(" ")
     data = {}
 
     out = "<ul>"
-    for table in names:
+    for table in sorted(names):
         
-        out = out + "<li><span class='name'>%s</span> |"
+        out = out + "<li><span class='name'>%s</span> " % table.title().replace("_", " ")
         files = {}
         for extention in extentions:
             filename = "%s.%s" % (table, extention)
@@ -27,13 +27,12 @@ def stats(names):
             date = time.ctime(os.path.getmtime(filename))
             download = 'data/%s' % filename
             files[extention] = ('data/%s' % filename, size, date)
-            out = out + "|<a href='%s'>%s</a> %s %s" % (download, filename, size, date)
+            out = out + "<div class='box'>| <a href='%s'>%s</a> <span class='size'>%sKb</span></div>" % (download, extention.upper(), size / 1000)
         
-        data[table.title().replace('_',' ')] = files
-
-	out= out + "</ul>"
-	click.echo('var result= "%s"' % out)
-click.echo(actions)
+        out = out + "| %s</li>" % date
+    out= out + "</ul>"
+    
+    click.echo(actions % out)
 
 if __name__ == '__main__':
     stats()

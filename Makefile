@@ -173,4 +173,4 @@ clean:
 	rm -rf *.dbf
 	rm -rf *.shx
 	rm -rf *.prj
-
+	rm -rf stats.js
