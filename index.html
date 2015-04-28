@@ -17,57 +17,7 @@
 </head>
 <html><body>
 <h1>Nepal OpenStreetMap Extracts</h1>
-<script>
-var data = {
-    "list": {
-        "Aerodromes (Point)": "aerodromes_point",
-        "Aerodromes (Polygon)": "aerodromes_polygon",
-        "All Roads": "all_roads",
-        "Banks": "banks",
-        "Buildings": "buildings",
-        "Cities": "cities",
-        "Famrs": "farms",
-        "Forest": "forest",
-        "Grassland": "grassland",
-        "Hamlets": "hamlets",
-        "Hotels": "hotels",
-        "Lakes": "lakes",
-        "Main Roads": "main_roads",
-        "Medical (Point)": "medical_point",
-        "Medical (Polygon)": "medical_polygon",
-        "Military": "military",
-        "Neighborhoods": "neighborhoods",
-        "Orchards": "orchards",
-        "Paths": "paths",
-        "Placenames": "placenames",
-        "Police Stations": "police_stations",
-        "Residential": "residential",
-        "Restaurants": "restaurants",
-        "Riverbanks": "riverbanks",
-        "Rivers": "rivers",
-        "Schools (Point)": "schools_point",
-        "Schools (Polygon)": "schools_polygon",
-        "Tracks": "tracks",
-        "Train Stations": "train_stations",
-        "Village Green": "village_green",
-        "Villages ": "villages",
-        "Wetlands": "wetlands"
-    }
-}
-
-function makeList(data){
-  var result = "<ul>";
-  for (var key in data) {
-    if (data.hasOwnProperty(key)) {
-      result += "<li><span class='name'>" + key + " </span>|<a href='data/" + data[key] + ".shp.zip'> .shp</a> | <a href='data/" + data[key] + ".sql.zip'>.sql</a> | <a href='data/" + data[key] + ".pbf'>.pbf</a> | </li>"
-    }
-  }
-  result += "</ul>"
-  return result
-}
-
-document.write(makeList(data.list));
-</script>
+<script src="data/stats.js"></script>
 
 
 <p>Data extracts provided by <a href="http://www.geofabrik.de/">GeoFabrik</a> and <a href="http://www.gfdrr.org">GFDRR</a><br />
