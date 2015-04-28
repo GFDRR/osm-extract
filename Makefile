@@ -131,10 +131,18 @@ train_stations.pbf: nepal-latest.pbf
 SQL_EXPORTS = buildings.sql schools_point.sql schools_polygon.sql medical_point.sql medical_polygon.sql rivers.sql riverbanks.sql lakes.sql farms.sql forest.sql grassland.sql military.sql orchards.sql residential.sql village_green.sql wetlands.sql cities.sql hamlets.sql neighborhoods.sql villages.sql placenames.sql all_roads.sql main_roads.sql paths.sql tracks.sql aerodromes_point.sql aerodromes_polygon.sql banks.sql  hotels.sql police_stations.sql restaurants.sql train_stations.sql
 
 PBF_EXPORTS = $(SQL_EXPORTS:.sql=.pbf)
+POSTGIS_EXPORTS = $(SQL_EXPORTS:.sql=.postgis)
 SQL_ZIP_EXPORTS = $(SQL_EXPORTS:.sql=.sql.zip)
+SHP_ZIP_EXPORTS = $(SQL_EXPORTS:.sql=.shp.zip)
 
 %.sql: %.pbf
 	ogr2ogr -f PGDump $@ $< -lco COLUMN_TYPES=other_tags=hstore --config OSM_CONFIG_FILE conf/$(basename $@).ini
+
+%.shp: %.pbf
+	ogr2ogr -f "ESRI Shapefile" $@ $< --config OSM_CONFIG_FILE conf/$(basename $@).ini
+
+%.sql.zip: %.shp
+	zip $@ $< $(basename $<).prj  $(basename $<).dbf $(basename $<).shx
 
 %.sql.zip: %.sql
 	zip $@ $<
@@ -144,8 +152,11 @@ SQL_ZIP_EXPORTS = $(SQL_EXPORTS:.sql=.sql.zip)
 	psql -f conf/$(basename $@)_alter.sql $(DB)
 	psql -f conf/clean.sql -q $(DB)
 
-all: $(PBF_EXPORTS)
+all: $(PBF_EXPORTS) $(SQL_EXPORTS) $(POSTGIS_EXPORTS) $(SQL_ZIP_EXPORTS)
 	cp *.pbf $(EXPORT_DIR)
+	cp *.sql.zip $(EXPORT_DIR)
+	cp *.shp.zip $(EXPORT_DIR)
+
 
 
 .PHONY: clean
