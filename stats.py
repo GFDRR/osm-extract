@@ -1,21 +1,12 @@
 import click
 import json
+import time
+import os
 
 actions="""
-
-function makeList(data){
-  var result = "<ul>";
-  for (var key in data) {
-    if (data.hasOwnProperty(key)) {
-      result += "<li><span class='name'>" + key + " </span>|<a href='data/" + data[key] + ".shp.zip'> .shp</a> | <a href='data/" + data[key] + ".sql.zip'>.sql</a> | <a href='data/" + data[key] + ".pbf'>.pbf</a> | </li>"
-    }
-  }
-  result += "</ul>"
-  return result
-}
-
-document.write(makeList(data.list));
+document.write(result);
 """
+extentions = ['sql.zip', 'pbf', 'shp.zip']
 
 @click.command()
 @click.option('--names', help='Filenames.')
@@ -23,9 +14,26 @@ def stats(names):
     """Simple program that generates stats for OSM exports"""
     output='var data = {"list": %s}'
     names = names.split(" ")
-    data=dict(zip([x.title().replace('_',' ') for x in names], names))
-    click.echo(output % json.dumps(data))
-    click.echo(actions)
+    data = {}
+
+    out = "<ul>"
+    for table in names:
+        
+        out = out + "<li><span class='name'>%s</span> |"
+        files = {}
+        for extention in extentions:
+            filename = "%s.%s" % (table, extention)
+            size = os.path.getsize(filename)
+            date = time.ctime(os.path.getmtime(filename))
+            download = 'data/%s' % filename
+            files[extention] = ('data/%s' % filename, size, date)
+            out = out + "|<a href='%s'>%s</a> %s %s" % (download, filename, size, date)
+        
+        data[table.title().replace('_',' ')] = files
+
+	out= out + "</ul>"
+	click.echo('var result= "%s"' % out)
+click.echo(actions)
 
 if __name__ == '__main__':
     stats()
