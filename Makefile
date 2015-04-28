@@ -128,8 +128,9 @@ restaurants.pbf: nepal-latest.pbf
 train_stations.pbf: nepal-latest.pbf
 	osmosis --read-pbf-fast file="$<" --tf accept-nodes "railway=station" --tf reject-ways --tf reject-relations  --write-pbf file="$@"
 
-SQL_EXPORTS = buildings.sql schools_point.sql schools_polygon.sql medical_point.sql medical_polygon.sql rivers.sql riverbanks.sql lakes.sql farms.sql forest.sql grassland.sql military.sql orchards.sql residential.sql village_green.sql wetlands.sql cities.sql hamlets.sql neighborhoods.sql villages.sql placenames.sql all_roads.sql main_roads.sql paths.sql tracks.sql aerodromes_point.sql aerodromes_polygon.sql banks.sql  hotels.sql police_stations.sql restaurants.sql train_stations.sql
+SQL_EXPORTS = buildings.sql schools_point.sql schools_polygon.sql medical_point.sql medical_polygon.sql rivers.sql riverbanks.sql lakes.sql farms.sql forest.sql grassland.sql military.sql orchards.sql residential.sql village_green.sql cities.sql hamlets.sql neighborhoods.sql villages.sql placenames.sql all_roads.sql main_roads.sql paths.sql tracks.sql aerodromes_point.sql aerodromes_polygon.sql banks.sql  hotels.sql police_stations.sql restaurants.sql train_stations.sql
 
+EXPORTS = $(SQL_EXPORTS:.sql=)
 PBF_EXPORTS = $(SQL_EXPORTS:.sql=.pbf)
 POSTGIS_EXPORTS = $(SQL_EXPORTS:.sql=.postgis)
 SQL_ZIP_EXPORTS = $(SQL_EXPORTS:.sql=.sql.zip)
@@ -139,9 +140,9 @@ SHP_ZIP_EXPORTS = $(SQL_EXPORTS:.sql=.shp.zip)
 	ogr2ogr -f PGDump $@ $< -lco COLUMN_TYPES=other_tags=hstore --config OSM_CONFIG_FILE conf/$(basename $@).ini
 
 %.shp: %.pbf
-	ogr2ogr -f "ESRI Shapefile" $@ $< --config OSM_CONFIG_FILE conf/$(basename $@).ini
+	pgsql2shp -f $(basename $@) $(DB) public.$(basename $<)
 
-%.sql.zip: %.shp
+%.shp.zip: %.shp
 	zip $@ $< $(basename $<).prj  $(basename $<).dbf $(basename $<).shx
 
 %.sql.zip: %.sql
@@ -152,15 +153,24 @@ SHP_ZIP_EXPORTS = $(SQL_EXPORTS:.sql=.shp.zip)
 	psql -f conf/$(basename $@)_alter.sql $(DB)
 	psql -f conf/clean.sql -q $(DB)
 
-all: $(PBF_EXPORTS) $(SQL_EXPORTS) $(POSTGIS_EXPORTS) $(SQL_ZIP_EXPORTS)
+all: $(PBF_EXPORTS) $(SQL_EXPORTS) $(SQL_ZIP_EXPORTS) $(SHP_ZIP_EXPORTS) stats.js
 	cp *.pbf $(EXPORT_DIR)
 	cp *.sql.zip $(EXPORT_DIR)
 	cp *.shp.zip $(EXPORT_DIR)
+	cp stats.js $(EXPORT_DIR)
 
+postgis: $(POSTGIS_EXPORTS)
 
+stats.js: 
+	python stats.py --names="$(EXPORTS)" >> $@
 
 .PHONY: clean
 clean:
 	rm -rf *.pbf
 	rm -rf *.zip
 	rm -rf *.sql
+	rm -rf *.shp
+	rm -rf *.dbf
+	rm -rf *.shx
+	rm -rf *.prj
+
