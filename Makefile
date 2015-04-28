@@ -16,8 +16,8 @@ nepal-latest.pbf:
 buildings.pbf: nepal-latest.pbf
 	osmosis --read-pbf-fast file="$<"  --tf accept-ways "building=*"  --write-pbf file="$@"
 
-damage.pbf: buildings.pbf
-	osmosis --read-pbf-fast file="$<" --wkv keyValueList="building.damaged,buildings.collapsed" --used-node  --write-pbf  file="$@"
+idp_camps.pbf: nepal-latest.pbf
+	osmosis --read-pbf-fast file="$<" --wkv keyValueList="idp:camp_site=spontaneous_camp,damage:event.nepal_earthquake_2015" --used-node  --write-pbf  file="$@"
 
 huts.pbf: buildings.pbf
 	osmosis --read-pbf-fast file="$<" --tf accept-ways "building=hut" --used-node --write-pbf file="$@"
@@ -128,7 +128,7 @@ restaurants.pbf: nepal-latest.pbf
 train_stations.pbf: nepal-latest.pbf
 	osmosis --read-pbf-fast file="$<" --tf accept-nodes "railway=station" --tf reject-ways --tf reject-relations  --write-pbf file="$@"
 
-SQL_EXPORTS = buildings.sql schools_point.sql schools_polygon.sql medical_point.sql medical_polygon.sql rivers.sql riverbanks.sql lakes.sql farms.sql forest.sql grassland.sql military.sql orchards.sql residential.sql village_green.sql cities.sql hamlets.sql neighborhoods.sql villages.sql placenames.sql all_roads.sql main_roads.sql paths.sql tracks.sql aerodromes_point.sql aerodromes_polygon.sql banks.sql  hotels.sql police_stations.sql restaurants.sql train_stations.sql
+SQL_EXPORTS = buildings.sql schools_point.sql schools_polygon.sql medical_point.sql medical_polygon.sql rivers.sql riverbanks.sql lakes.sql farms.sql forest.sql grassland.sql military.sql orchards.sql residential.sql village_green.sql cities.sql hamlets.sql neighborhoods.sql villages.sql placenames.sql all_roads.sql main_roads.sql paths.sql tracks.sql aerodromes_point.sql aerodromes_polygon.sql banks.sql  hotels.sql police_stations.sql restaurants.sql train_stations.sql idp_camps.sql
 
 EXPORTS = $(SQL_EXPORTS:.sql=)
 PBF_EXPORTS = $(SQL_EXPORTS:.sql=.pbf)
