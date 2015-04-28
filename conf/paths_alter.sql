@@ -1,0 +1,2 @@
+DROP TABLE paths;
+CREATE TABLE paths AS SELECT * FROM lines;

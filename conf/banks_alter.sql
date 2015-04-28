@@ -1,0 +1,2 @@
+DROP TABLE banks;
+CREATE TABLE banks AS SELECT * FROM points;
