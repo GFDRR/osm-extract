@@ -7,7 +7,14 @@ actions="""
     var result="%s";
     document.write(result);
 """
-extentions = ['sql.zip', 'pbf', 'shp.zip']
+extentions = ['sql.zip', 'pbf', 'shp.zip', 'json', 'kml']
+
+def sizeof_fmt(num, suffix='B'):
+    for unit in ['','K','M','G','T','P','E','Z']:
+        if abs(num) < 1024.0:
+            return "%3.1f%s%s" % (num, unit, suffix)
+        num /= 1024.0
+    return "%.1f%s%s" % (num, 'Yi', suffix)
 
 @click.command()
 @click.option('--names', help='Filenames.')
@@ -27,9 +34,9 @@ def stats(names):
             date = time.ctime(os.path.getmtime(filename))
             download = 'data/%s' % filename
             files[extention] = ('data/%s' % filename, size, date)
-            out = out + "<div class='box'>| <a href='%s'>%s</a> <span class='size'>%sKb</span></div>" % (download, extention.upper(), size / 1000)
+            out = out + "<div class='box'>|    <a href='%s'>%s</a> <span class='size'>%s</span></div>" % (download, extention.upper(), sizeof_fmt(size))
         
-        out = out + "| %s</li>" % date
+        out = out + "|    %s</li>" % date
     out= out + "</ul>"
     
     click.echo(actions % out)
