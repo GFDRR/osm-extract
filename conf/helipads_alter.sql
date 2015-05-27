@@ -1,2 +1,2 @@
-DROP TABLE helipad;
-CREATE TABLE helipad AS SELECT * FROM multipolygons;
+DROP TABLE helipads;
+CREATE TABLE helipads AS SELECT * FROM multipolygons;
