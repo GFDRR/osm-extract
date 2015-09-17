@@ -1,2 +1,2 @@
-DROP TABLE farms;
+DROP TABLE IF EXISTS farms;
 CREATE TABLE farms AS SELECT * FROM multipolygons;

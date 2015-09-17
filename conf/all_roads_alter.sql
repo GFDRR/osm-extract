@@ -1,2 +1,2 @@
-DROP TABLE all_roads;
+DROP TABLE IF EXISTS all_roads;
 CREATE TABLE all_roads AS SELECT * FROM lines;

@@ -1,2 +1,2 @@
-DROP TABLE paths;
+DROP TABLE IF EXISTS paths;
 CREATE TABLE paths AS SELECT * FROM lines;

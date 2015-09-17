@@ -6,133 +6,151 @@
 # like the one shipped with Ubuntu 14.04 do not have this option.
 
 # Once you have them, make sure gdal/apps and osmosis/bin are added to our path before running this file.
+ifeq ($(COUNTRY),)
+abort:
+	@echo Variable COUNTRY not set && false
+endif
 
-DB=dominica_osm
-EXPORT_DIR=/var/www/html/dominica/data
+DB=$(COUNTRY)_osm
+EXPORT_DIR=/var/www/html/$(COUNTRY)/data
 
-dominica-latest.pbf: 
-	curl -o $@ 'http://download.openstreetmap.fr/extracts/central-america/dominica-latest.osm.pbf'
+nepal-latest.pbf: 
+	curl -o $@ 'http://labs.geofabrik.de/nepal/latest.osm.pbf'
 
-buildings.pbf: dominica-latest.pbf
+dominica-latest.pbf:
+	curl -o $@ 'http://download.openstreetmap.fr/extracts/central-america/country-latest.osm.pbf'
+
+country-latest.pbf: $(COUNTRY)-latest.pbf
+	cp $< $@
+
+buildings.pbf: country-latest.pbf
 	osmosis --read-pbf-fast file="$<"  --tf accept-ways "building=*"  --write-pbf file="$@"
 
-idp_camps.pbf: dominica-latest.pbf
+bridges.pbf: country-latest.pbf
+	osmosis --read-pbf-fast file="$<"  --tf accept-ways "bridge=*"  --write-pbf file="$@"
+
+idp_camps.pbf: country-latest.pbf
 	osmosis --read-pbf-fast file="$<" --wkv keyValueList="idp:camp_site=spontaneous_camp,damage:event.dominica_earthquake_2015" --used-node  --write-pbf  file="$@"
 
 huts.pbf: buildings.pbf
 	osmosis --read-pbf-fast file="$<" --tf accept-ways "building=hut" --used-node --write-pbf file="$@"
 
-trees.pbf: dominica-latest.pbf
+trees.pbf: country-latest.pbf
 	osmosis --read-pbf-fast file="$<" --tf accept-nodes "natural=tree" --tf reject-ways --tf reject-relations --write-pbf file="$@"
 
-schools_point.pbf: dominica-latest.pbf
+schools_point.pbf: country-latest.pbf
 	osmosis --read-pbf-fast file="$<" --nkv keyValueList="amenity.school,amenity.university,amenity.college,amenity.kindergarten" --write-pbf file="$@"
 
-schools_polygon.pbf: dominica-latest.pbf
+schools_polygon.pbf: country-latest.pbf
 	osmosis --read-pbf-fast file="$<" --wkv keyValueList="amenity.school,amenity.university,amenity.college,amenity.kindergarten" --used-node --write-pbf file="$@"
 
-medical_point.pbf: dominica-latest.pbf
+medical_point.pbf: country-latest.pbf
 	osmosis --read-pbf-fast file="$<" --nkv keyValueList="amenity.hospital,amenity.doctors,amenity.doctor,amenity.clinic,amenity.health_post" --write-pbf file="$@"
 
 medical_polygon.pbf: buildings.pbf
 	osmosis --read-pbf-fast file="$<" --wkv keyValueList="amenity.hospital,amenity.doctors,amenity.doctor,amenity.clinic,amenity.health_post" --used-node --write-pbf file="$@"
   
-roads.pbf: dominica-latest.pbf
+roads.pbf: country-latest.pbf
 	osmosis --read-pbf-fast file="$<"  --tf accept-ways "highway=*" --used-node --write-pbf file="$@"
 
-rivers.pbf: dominica-latest.pbf
+rivers.pbf: country-latest.pbf
 	osmosis --read-pbf-fast file="$<" --wkv keyValueList="waterway.river,waterway.stream,waterway.ditch" --used-node --write-pbf file="$@"
   
-riverbanks.pbf: dominica-latest.pbf
+riverbanks.pbf: country-latest.pbf
 	osmosis --read-pbf-fast file="$<" --wkv keyValueList="waterway.riverbank" --used-node --write-pbf file="$@"
 
-lakes.pbf: dominica-latest.pbf
+lakes.pbf: country-latest.pbf
 	osmosis --read-pbf-fast file="$<" --wkv keyValueList="natural.water,water.lake" --used-node --write-pbf file="$@"
  
-beaches.pbf: dominica-latest.pbf
+beaches.pbf: country-latest.pbf
 	osmosis --read-pbf-fast file="$<" --wkv keyValueList="natural.beach" --used-node --write-pbf file="$@"
 
-farms.pbf: dominica-latest.pbf
+farms.pbf: country-latest.pbf
 	osmosis --read-pbf-fast file="$<" --wkv keyValueList="landuse.farm,landuse.farmland,landuse.farmyard" --used-node --write-pbf file="$@"
  
-forest.pbf: dominica-latest.pbf
+forest.pbf: country-latest.pbf
 	osmosis --read-pbf-fast file="$<" --wkv keyValueList="landuse.forest" --used-node --write-pbf file="$@"
  
-grassland.pbf: dominica-latest.pbf
+grassland.pbf: country-latest.pbf
 	osmosis --read-pbf-fast file="$<" --wkv keyValueList="landuse.grass,landuse.grassland,natural.wood,natural.grassland" --used-node --write-pbf file="$@"
  
-military.pbf: dominica-latest.pbf
+military.pbf: country-latest.pbf
 	osmosis --read-pbf-fast file="$<"  --tf accept-ways "landuse=military" --used-node --write-pbf file="$@"
  
-orchards.pbf: dominica-latest.pbf
+orchards.pbf: country-latest.pbf
 	osmosis --read-pbf-fast file="$<"  --tf accept-ways "landuse=orchard" --used-node --write-pbf file="$@"
 
-residential.pbf: dominica-latest.pbf
+residential.pbf: country-latest.pbf
 	osmosis --read-pbf-fast file="$<"  --tf accept-ways "landuse=residential" --used-node --write-pbf file="$@"
 
-village_green.pbf: dominica-latest.pbf
+village_green.pbf: country-latest.pbf
 	osmosis --read-pbf-fast file="$<"  --tf accept-ways "landuse=village_green" --used-node --write-pbf file="$@"
 
-wetlands.pbf: dominica-latest.pbf
+wetlands.pbf: country-latest.pbf
 	osmosis --read-pbf-fast file="$<"  --tf accept-ways "landuse=wetland" --used-node --write-pbf file="$@"
 
-cities.pbf: dominica-latest.pbf
+cities.pbf: country-latest.pbf
 	osmosis --read-pbf-fast file="$<"  --tf accept-nodes "place=city" --tf reject-ways --tf reject-relations --write-pbf file="$@"
 
-hamlets.pbf: dominica-latest.pbf
+hamlets.pbf: country-latest.pbf
 	osmosis --read-pbf-fast file="$<"  --tf accept-nodes "place=hamlet" --tf reject-ways --tf reject-relations  --write-pbf file="$@"
 
-neighborhoods.pbf: dominica-latest.pbf
+neighborhoods.pbf: country-latest.pbf
 	osmosis --read-pbf-fast file="$<" --nkv keyValueList="place.neighborhood,place.neighbourhood" --tf reject-ways --tf reject-relations  --write-pbf file="$@"
 
-villages.pbf: dominica-latest.pbf
+villages.pbf: country-latest.pbf
 	osmosis --read-pbf-fast file="$<"  --tf accept-nodes "place=village" --tf reject-ways --tf reject-relations --write-pbf file="$@"
 
-placenames.pbf: dominica-latest.pbf
+placenames.pbf: country-latest.pbf
 	osmosis --read-pbf-fast file="$<" --nkv keyValueList="place.city,place.hamlet,place.neighborhood,place.neighbourhood,place.village" --tf reject-ways --tf reject-relations --write-pbf file="$@"
 
 
-all_roads.pbf: dominica-latest.pbf
-	osmosis --read-pbf-fast file="$<" --wkv keyValueList="highway.tertiary,highway.residential,highway.service,highway.secondary,highway.track,highway.footway,highway.path,highway.classified,highway.primary,highway.trunk,highway.motorway,highway.construction,highway.proposed,highway.cycleway,highway.living_street,highway.steps,highway.road,highway.pedestrian,highway.construction,highway.bridleway,highway.platformhighway.proposed" --used-node --write-pbf file="$@"
+all_roads.pbf: country-latest.pbf
+	osmosis --read-pbf-fast file="$<" --wkv keyValueList="highway.unclassified,highway.tertiary,highway.residential,highway.service,highway.secondary,highway.track,highway.footway,highway.path,highway.classified,highway.primary,highway.trunk,highway.motorway,highway.construction,highway.proposed,highway.cycleway,highway.living_street,highway.steps,highway.road,highway.pedestrian,highway.construction,highway.bridleway,highway.platformhighway.proposed" --used-node --write-pbf file="$@"
 
-main_roads.pbf: dominica-latest.pbf
+main_roads.pbf: country-latest.pbf
 	osmosis --read-pbf-fast file="$<" --wkv keyValueList="highway.motorway,highway.trunk,highway.primary" --used-node --write-pbf file="$@"
 
-paths.pbf: dominica-latest.pbf
+paths.pbf: country-latest.pbf
 	osmosis --read-pbf-fast file="$<" --wkv keyValueList="highway.path,highway.trunk,highway.primary" --used-node  --write-pbf file="$@"
 
-tracks.pbf: dominica-latest.pbf
+tracks.pbf: country-latest.pbf
 	osmosis --read-pbf-fast file="$<"  --wkv keyValueList="highway.track" --used-node --write-pbf file="$@"
 
-aerodromes_point.pbf: dominica-latest.pbf
+aerodromes_point.pbf: country-latest.pbf
 	osmosis --read-pbf-fast file="$<" --nkv keyValueList="aeroway.aerodrome,aeroway.international" --write-pbf file="$@"
 
-aerodromes_polygon.pbf: dominica-latest.pbf
+aerodromes_polygon.pbf: country-latest.pbf
 	osmosis --read-pbf-fast file="$<"  --wkv keyValueList="aeroway.aerodrome,aeroway.international" --used-node --write-pbf file="$@"
 
-banks.pbf: dominica-latest.pbf
+banks.pbf: country-latest.pbf
 	osmosis --read-pbf-fast file="$<" --tf accept-nodes "amenity=bank" --tf reject-ways --tf reject-relations --write-pbf file="$@"
 
-fire_stations.pbf: dominica-latest.pbf
+fire_stations.pbf: country-latest.pbf
 	osmosis --read-pbf-fast file="$<" --tf accept-nodes "amenity=fire_station" --tf reject-ways --tf reject-relations  --write-pbf file="$@"
 
-hotels.pbf: dominica-latest.pbf
+hotels.pbf: country-latest.pbf
 	osmosis --read-pbf-fast file="$<" --nkv keyValueList="tourism.hotel,amenity.hotel" --tf reject-ways --tf reject-relations  --write-pbf file="$@"
 
-police_stations.pbf: dominica-latest.pbf
+police_stations.pbf: country-latest.pbf
 	osmosis --read-pbf-fast file="$<" --nkv keyValueList="amenity.police,tourism.police" --tf reject-ways --tf reject-relations  --write-pbf file="$@"
 
-restaurants.pbf: dominica-latest.pbf
+restaurants.pbf: country-latest.pbf
 	osmosis --read-pbf-fast file="$<" --nkv keyValueList="amenity.restaurant,amenity.restaurants" --tf reject-ways --tf reject-relations --write-pbf file="$@"
 
-train_stations.pbf: dominica-latest.pbf
+train_stations.pbf: country-latest.pbf
 	osmosis --read-pbf-fast file="$<" --tf accept-nodes "railway=station" --tf reject-ways --tf reject-relations  --write-pbf file="$@"
 
-helipads.pbf: dominica-latest.pbf
+helipads.pbf: country-latest.pbf
 	osmosis --read-pbf-fast file="$<" --wkv keyValueList="aeroway.helipad" --used-node --write-pbf file="$@"
 
+ifeq ($(COUNTRY), dominica)
+ SQL_EXPORTS = buildings.sql schools_point.sql schools_polygon.sql medical_point.sql medical_polygon.sql rivers.sql lakes.sql farms.sql forest.sql grassland.sql orchards.sql hamlets.sql villages.sql placenames.sql all_roads.sql main_roads.sql paths.sql tracks.sql aerodromes_point.sql aerodromes_polygon.sql banks.sql  hotels.sql police_stations.sql restaurants.sql bridges.sql
+endif
 
-SQL_EXPORTS = buildings.sql schools_point.sql schools_polygon.sql medical_point.sql medical_polygon.sql rivers.sql riverbanks.sql lakes.sql farms.sql forest.sql grassland.sql military.sql orchards.sql residential.sql village_green.sql cities.sql hamlets.sql neighborhoods.sql villages.sql placenames.sql all_roads.sql main_roads.sql paths.sql tracks.sql aerodromes_point.sql aerodromes_polygon.sql banks.sql  hotels.sql police_stations.sql restaurants.sql train_stations.sql idp_camps.sql helipads.sql
+ifeq ($(COUNTRY), nepal)
+ SQL_EXPORTS = buildings.sql schools_point.sql schools_polygon.sql medical_point.sql medical_polygon.sql rivers.sql riverbanks.sql lakes.sql farms.sql forest.sql grassland.sql military.sql orchards.sql residential.sql village_green.sql cities.sql hamlets.sql neighborhoods.sql villages.sql placenames.sql all_roads.sql main_roads.sql paths.sql tracks.sql aerodromes_point.sql aerodromes_polygon.sql banks.sql  hotels.sql police_stations.sql restaurants.sql train_stations.sql idp_camps.sql helipads.sql
+endif
 
 EXPORTS = $(SQL_EXPORTS:.sql=)
 PBF_EXPORTS = $(SQL_EXPORTS:.sql=.pbf)
@@ -145,7 +163,7 @@ KML_EXPORTS = $(SQL_EXPORTS:.sql=.kml)
 %.sql: %.pbf
 	ogr2ogr -f PGDump $@ $< -lco COLUMN_TYPES=other_tags=hstore --config OSM_CONFIG_FILE conf/$(basename $@).ini
 
-%.shp: %.pbf
+%.shp: %.postgis
 	pgsql2shp -f $(basename $@) $(DB) public.$(basename $<)
 
 %.json: %.shp
@@ -190,3 +208,4 @@ clean:
 	rm -rf *.json
 	rm -rf *.kml
 	rm -rf stats.js
+	psql -f conf/clean.sql -q $(DB)
