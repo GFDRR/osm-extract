@@ -14,6 +14,9 @@ endif
 DB=$(COUNTRY)_osm
 EXPORT_DIR=/var/www/html/$(COUNTRY)/data
 
+bangladesh-latest.pbf:
+	curl -o $@ 'http://download.geofabrik.de/asia/bangladesh-latest.osm.pbf'
+
 nepal-latest.pbf: 
 	curl -o $@ 'http://labs.geofabrik.de/nepal/latest.osm.pbf'
 
@@ -151,6 +154,11 @@ endif
 ifeq ($(COUNTRY), nepal)
  SQL_EXPORTS = buildings.sql schools_point.sql schools_polygon.sql medical_point.sql medical_polygon.sql rivers.sql riverbanks.sql lakes.sql farms.sql forest.sql grassland.sql military.sql orchards.sql residential.sql village_green.sql cities.sql hamlets.sql neighborhoods.sql villages.sql placenames.sql all_roads.sql main_roads.sql paths.sql tracks.sql aerodromes_point.sql aerodromes_polygon.sql banks.sql  hotels.sql police_stations.sql restaurants.sql train_stations.sql idp_camps.sql helipads.sql
 endif
+
+ifeq ($(COUNTRY), bangladesh)
+ SQL_EXPORTS = buildings.sql schools_point.sql schools_polygon.sql medical_point.sql medical_polygon.sql rivers.sql riverbanks.sql lakes.sql farms.sql forest.sql grassland.sql military.sql orchards.sql residential.sql cities.sql hamlets.sql neighborhoods.sql villages.sql placenames.sql all_roads.sql main_roads.sql paths.sql tracks.sql aerodromes_point.sql aerodromes_polygon.sql banks.sql  hotels.sql police_stations.sql restaurants.sql train_stations.sql helipads.sql
+endif
+
 
 EXPORTS = $(SQL_EXPORTS:.sql=)
 PBF_EXPORTS = $(SQL_EXPORTS:.sql=.pbf)
