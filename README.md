@@ -20,3 +20,12 @@ Other
 
  * You can tweak that configuration file to add or remove fields on the table, and still keep all others as a hstore (key/value) fields.
 
+Myanmar
+-------
+mkdir -p /var/www/myanmar/data
+su - postgres
+createdb myanmar_osm
+psql myanmar_osm
+CREATE EXTENSION postgis;
+CREATE EXTENSION hstore;
+make all COUNTRY=myanmar
